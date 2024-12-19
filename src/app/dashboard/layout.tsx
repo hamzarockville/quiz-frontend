@@ -17,25 +17,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-  //   <html lang="en">
-  //     <body
-       
-  //     >
-  //         <Navbar />
-
-  //       <SidebarProvider>
-  //         <AppSidebar />
-  //         {children}
-  //       </SidebarProvider>
-  //     </body>
-  //   </html>
-  <html lang="en">
+    <html lang="en">
       <body>
         <CustomSidebar />
-        <Navbar />
-        <div className="ml-0 md:ml-64">{children}</div> {/* Adjust for sidebar */}
+        <div className="ml-4 md:ml-52 mr-4">
+          <Navbar />
+          <div>{children}</div>
+        </div>
       </body>
     </html>
   );
 }
+
 

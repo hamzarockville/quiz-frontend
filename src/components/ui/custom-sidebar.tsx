@@ -75,7 +75,7 @@ export default function CustomSidebar() {
         className={cn(
           "fixed z-40 h-screen bg-gray-600 text-white transition-transform duration-300",
           isOpen ? "translate-x-0" : "-translate-x-full",
-          "md:translate-x-0 md:w-64"
+          "md:translate-x-0 md:w-48"
         )}
       >
         {/* <div className="p-4">

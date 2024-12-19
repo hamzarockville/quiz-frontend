@@ -97,7 +97,7 @@ export default function CandidateTestsPage() {
                   <TableCell className="font-medium">{test.testName}</TableCell>
                   <TableCell>{test.candidateName}</TableCell>
                   <TableCell>{test.email}</TableCell>
-                  <TableCell>{test.score}%</TableCell>
+                  <TableCell>{test.score}</TableCell>
                   {/* <TableCell>{new Date(test.completedAt).toLocaleString()}</TableCell> */}
                   <TableCell>
                     <Button variant="ghost" size="sm" onClick={() => handleViewResults(test.id)}>
