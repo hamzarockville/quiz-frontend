@@ -30,7 +30,8 @@ export interface SubscriptionPlan {
   type: "individual" | "team";
   pricePerMember?: number;
 }
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+const stripePromise = loadStripe('pk_test_P15Lr9fB7b1opbweuUK8uKl6');
+
 export default function TakeTest() {
   const [step, setStep] = useState(1);
   const [jobDescription, setJobDescription] = useState("");

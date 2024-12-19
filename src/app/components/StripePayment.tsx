@@ -5,7 +5,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { apiRequest } from "@/lib/api";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+const stripePromise = loadStripe('pk_test_P15Lr9fB7b1opbweuUK8uKl6');
 
 export function CheckoutForm({ amount, userId, planId, teamSize }: { amount: number; userId: string; planId: string; teamSize?: number }) {
     const stripe = useStripe();
