@@ -6,7 +6,7 @@ interface RequestOptions {
   body?: any;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://quiz-backend-sigma-six.vercel.app';
 
 export async function apiRequest<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
     const { method = 'GET', headers = {}, body } = options;
