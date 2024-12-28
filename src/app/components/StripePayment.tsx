@@ -54,7 +54,7 @@ export function CheckoutForm({ amount, userId, planId, teamSize }: { amount: num
   
     return (
       <form onSubmit={handleSubmit} className="space-y-4">
-        <CardElement className="p-4 border rounded" />
+        <CardElement className="p-4 border rounded"  />
         <button
           type="submit"
           disabled={!stripe || loading}

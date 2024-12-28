@@ -9,13 +9,15 @@ import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { apiRequest } from '@/lib/api'
-
+import { useToast } from '@/hooks/use-toast'
+import { ToastAction } from "@/components/ui/toast"
 interface LoginData {
   email: string
   password: string
 }
 
 export default function Login() {
+  const { toast } = useToast()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -35,11 +37,21 @@ export default function Login() {
       // Save the token or user data to localStorage or context if needed
       localStorage.setItem('authToken', response.access_token)
       localStorage.setItem('user', JSON.stringify(response.user)) 
-      alert('Login successful.')
-      router.push('/dashboard') // Redirect to dashboard or home page
+      router.push('/dashboard') 
+
+      // toast({
+      //   title: "Signed in successfully ",
+      //   description: "Welcome back!",
+      // })
+
     } catch (error) {
       console.error('Login error:', error)
-      alert('Login failed. Please check your credentials.')
+      toast({
+        variant: "destructive",
+        title: "Login Failed ",
+        description: " Please check your credentials.",
+      })
+
     } finally {
       setIsLoading(false)
     }

@@ -10,6 +10,8 @@ import { apiRequest } from "@/lib/api";
 const defaultItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Create Test", url: "/dashboard/create-test", icon: Inbox },
+  { title: "Settings", url: "/dashboard/settings", icon: Inbox },
+  { title: "Billing Settings", url: "/dashboard/billing", icon: Inbox },
   { title: "View Results", url: "/dashboard/candidate-tests", icon: Calendar },
   { title: "Show All Tests", url: "/dashboard/all-tests", icon: Search },
 ];

@@ -224,7 +224,7 @@ export default function TakeTest() {
                 >
                   Subscribe
                 </Button> */}
-                 <Elements stripe={stripePromise}>
+                 <Elements stripe={stripePromise} >
                   <CheckoutForm
                     amount={
                       plan.type === "team"
