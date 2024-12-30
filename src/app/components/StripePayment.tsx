@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { apiRequest } from "@/lib/api";
+import { useToast } from '@/hooks/use-toast'
+
 
 const stripePromise = loadStripe('pk_test_P15Lr9fB7b1opbweuUK8uKl6');
 
@@ -11,7 +13,8 @@ export function CheckoutForm({ amount, userId, planId, teamSize }: { amount: num
     const stripe = useStripe();
     const elements = useElements();
     const [loading, setLoading] = useState(false);
-  
+    const { toast } = useToast()
+
     const handleSubmit = async (event: React.FormEvent) => {
       event.preventDefault();
       setLoading(true);
@@ -31,7 +34,11 @@ export function CheckoutForm({ amount, userId, planId, teamSize }: { amount: num
         });
   
         if (result?.error) {
-          alert(result.error.message);
+           toast({
+            variant: "destructive",
+        title: "Error ",
+        description: result.error.message,
+      })
         } else if (result?.paymentIntent?.status === "succeeded") {
           // Subscribe the user upon successful payment
           await apiRequest(`/user/${userId}/subscribe`, {
@@ -41,12 +48,19 @@ export function CheckoutForm({ amount, userId, planId, teamSize }: { amount: num
               ...(teamSize ? { teamSize } : {}),
             },
           });
-          alert("Subscription successful!");
+          toast({
+            title: "Success ",
+            description: "Subscription successful!",
+          })
           window.location.reload();
         }
       } catch (error) {
         console.error("Error during payment:", error);
-        alert("Failed to process payment.");
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to process payment.",
+        })
       } finally {
         setLoading(false);
       }

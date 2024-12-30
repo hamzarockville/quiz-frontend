@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { apiRequest } from '@/lib/api'
+import { useToast } from '@/hooks/use-toast'
 
 interface RegisterData {
   name: string
@@ -25,6 +26,7 @@ export default function Register() {
   const [role, setRole] = useState('participant')
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+    const {toast} = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -38,14 +40,20 @@ export default function Register() {
       })
 
      
-      alert("Registration successful. Please log in.")
-
+      toast({
+        title: "Success",
+        description: "Registration successful. Please log in.",
+      })
       router.push('/login')
     } catch (error) {
       console.error('Registration error:', error)
     
-      alert("Registration Failed.")
-
+      alert("")
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Registration Failed.",
+      })
     } finally {
       setIsLoading(false)
     }

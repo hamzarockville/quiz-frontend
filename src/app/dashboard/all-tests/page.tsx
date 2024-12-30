@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/table'
 import { Edit, Share2, Trash2, Play } from 'lucide-react'
 import { apiRequest } from '@/lib/api'
+import { useToast } from '@/hooks/use-toast'
 
 interface Test {
   id: string
@@ -24,6 +25,8 @@ interface Test {
 export default function TestsPage() {
   const [tests, setTests] = useState<Test[]>([])
   const [loading, setLoading] = useState(true)
+  const { toast } = useToast()
+
 
   // Fetch quizzes from the API
   useEffect(() => {
@@ -54,7 +57,11 @@ export default function TestsPage() {
       setTests(tests.filter(test => test.id !== id))
     } catch (error) {
       console.error('Error deleting test:', error)
-      alert('Failed to delete test. Please try again.')
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete test. Please try again..",
+      })
     }
   }
 

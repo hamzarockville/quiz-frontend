@@ -1,4 +1,4 @@
-type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
 interface RequestOptions {
   method?: RequestMethod;

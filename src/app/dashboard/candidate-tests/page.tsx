@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/table';
 import { Eye } from 'lucide-react';
 import { apiRequest } from '@/lib/api';
+import { useToast } from '@/hooks/use-toast'
 
 interface CandidateTest {
   id: string;
@@ -28,13 +29,18 @@ export default function CandidateTestsPage() {
   const router = useRouter();
   const [candidateTests, setCandidateTests] = useState<CandidateTest[]>([]);
   const [loading, setLoading] = useState(true);
+    const {toast} = useToast()
 
   useEffect(() => {
     const fetchResults = async () => {
       try {
         const storedUser = localStorage.getItem('user');
         if (!storedUser) {
-          alert('User not logged in!');
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "User not logged in!",
+          })
           return;
         }
   
