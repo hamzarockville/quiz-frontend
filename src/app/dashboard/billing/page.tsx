@@ -20,7 +20,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { stripePromise } from "../create-test/page";
+import { stripePromise } from "@/lib/stripe";
 import { apiRequest } from "@/lib/api";
 import {
   Table,

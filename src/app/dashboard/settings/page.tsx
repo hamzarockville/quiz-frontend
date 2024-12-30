@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -16,11 +16,20 @@ import { apiRequest } from "@/lib/api";
 import { useToast } from '@/hooks/use-toast'
 
 const AccountSettingsPage = () => {
-  const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-  const [name, setName] = useState(storedUser.name || "");
-  const [email, setEmail] = useState(storedUser.email || "");
+  const [storedUser, setStoredUser] = useState<{ name?: string; email?: string; userId?: string }>({});
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-    const {toast} = useToast()
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      setStoredUser(user);
+      setName(user.name || "");
+      setEmail(user.email || "");
+    }
+  }, []);
 
   const handleUpdateName = async () => {
     try {
@@ -124,7 +133,7 @@ const AccountSettingsPage = () => {
             <DialogHeader>
               <DialogTitle>Change Password</DialogTitle>
             </DialogHeader>
-            <ChangePasswordDialog userId={storedUser.userId} />
+            <ChangePasswordDialog userId={storedUser.userId as string} />
           </DialogContent>
         </Dialog>
       </Card>

@@ -331,6 +331,8 @@
 //     </div>
 //   );
 // }
+
+// eslint-disable-next-line
 "use client";
 
 import { useState, useEffect } from "react";
@@ -346,6 +348,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { CheckoutForm } from "@/app/components/StripePayment";
 import { useToast } from "@/hooks/use-toast";
+import { stripePromise } from "@/lib/stripe";
 
 interface Question {
   id: number;
@@ -364,7 +367,7 @@ export interface SubscriptionPlan {
   pricePerMember?: number;
 }
 
-export const stripePromise = loadStripe("pk_test_P15Lr9fB7b1opbweuUK8uKl6");
+
 
 export default function TakeTest() {
   const [step, setStep] = useState(1);
