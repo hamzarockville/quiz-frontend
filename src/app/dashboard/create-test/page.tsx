@@ -426,6 +426,7 @@ export default function TakeTest() {
       const apiEndpoint = questionType === "mcq" ? "/quiz/generate" : "/quiz/generate-qna";
       const response: any = await apiRequest(apiEndpoint, {
         method: "POST",
+        
         body: {
           jobDescription,
           numQuestions: questionCount,

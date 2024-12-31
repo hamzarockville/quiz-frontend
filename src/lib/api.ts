@@ -7,15 +7,15 @@ interface RequestOptions {
 }
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://quiz-backend-ruddy.vercel.app';
-
 export async function apiRequest<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
     const { method = 'GET', headers = {}, body } = options;
   
     // Retrieve token from local storage
     const token = localStorage.getItem('authToken');
-  console.log('token', token)
+    console.log('token', token);
     const requestOptions: RequestInit = {
       method,
+      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json',
         ...(token ? { Authorization: `Bearer ${token}` } : {}), // Attach token if available
@@ -37,5 +37,4 @@ export async function apiRequest<T>(endpoint: string, options: RequestOptions = 
       console.error('API request failed:', error);
       throw error;
     }
-  }
-  
+}
