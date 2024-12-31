@@ -6,7 +6,7 @@ interface RequestOptions {
   body?: any;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://quiz-backend-ruddy.vercel.app';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://quiz-app-backend.eqpf0a.easypanel.host';
 export async function apiRequest<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
     const { method = 'GET', headers = {}, body } = options;
   
