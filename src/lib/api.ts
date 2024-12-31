@@ -15,7 +15,6 @@ export async function apiRequest<T>(endpoint: string, options: RequestOptions = 
     console.log('token', token);
     const requestOptions: RequestInit = {
       method,
-      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json',
         ...(token ? { Authorization: `Bearer ${token}` } : {}), // Attach token if available
