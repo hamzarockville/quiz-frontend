@@ -29,12 +29,12 @@
 //   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
 //   useEffect(() => {
-//     fetchUsers()
+//     fetchQUiz()
 //   }, [isDeleteDialogOpen])
 
-//   const fetchUsers = async () => {
+//   const fetchQUiz = async () => {
 //     try {
-//       const usersData = await apiRequest<User[]>('/user')
+//       const usersData = await apiRequest<User[]>('/quiz/all')
 //       console.log('usersData', usersData)
 //       setUsers(usersData)
 //     } catch (error) {
@@ -78,11 +78,11 @@
 
 //   return (
 //     <div className="container mx-auto py-10">
-//       <h1 className="text-3xl font-bold mb-6">Manage Users</h1>
+//       <h1 className="text-3xl font-bold mb-6">View Quizzes Created By Users</h1>
 
 //       <Card>
 //         <CardHeader>
-//           <CardTitle>All Users</CardTitle>
+//           <CardTitle>All Quiz</CardTitle>
 //         </CardHeader>
 //         <CardContent>
 //           <Table>
@@ -183,48 +183,45 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"
 import { apiRequest } from '@/lib/api'
 import { toast } from "@/hooks/use-toast"
-import { Loader2, Trash2, UserCog } from 'lucide-react'
+import { Loader2, Trash2, Eye } from 'lucide-react'
 
-interface BillingHistory {
-  invoiceId: string
-  amount: number
-  date: string
-}
-
-interface User {
-  id: string
+interface Quiz {
   _id: string
-  name: string
-  email: string
-  role: string
-  subscriptionPlanName: string
-  subscriptionPrice: number
-  subscriptionExpiresAt: string
-  isSubscribed: boolean
+  title: string
+  jobArea: string
+  vertical: string
+  createdBy: string
+  createdByName: string
   createdAt: string
-  billingHistory: BillingHistory[]
+  shareableLink: string
+  questions: {
+    text: string
+    options: string[]
+    correctAnswer: number
+    type: string
+    _id: string
+  }[]
 }
 
-export default function ManageUsers() {
-  const [users, setUsers] = useState<User[]>([])
+export default function ViewQuizzes() {
+  const [quizzes, setQuizzes] = useState<Quiz[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
   useEffect(() => {
-    fetchUsers()
+    fetchQuizzes()
   }, [isDeleteDialogOpen])
 
-  const fetchUsers = async () => {
+  const fetchQuizzes = async () => {
     try {
-      const usersData = await apiRequest<User[]>('/user')
-      console.log('usersData', usersData)
-      setUsers(usersData)
+      const quizzesData = await apiRequest<Quiz[]>('/quiz/all')
+      setQuizzes(quizzesData)
     } catch (error) {
-      console.error('Error fetching users:', error)
+      console.error('Error fetching quizzes:', error)
       toast({
         title: "Error",
-        description: "Failed to fetch users. Please try again.",
+        description: "Failed to fetch quizzes. Please try again.",
         variant: "destructive",
       })
     } finally {
@@ -232,27 +229,23 @@ export default function ManageUsers() {
     }
   }
 
-  const handleDeleteUser = async (userId: string) => {
+  const handleDeleteQuiz = async (quizId: string) => {
     try {
-      await apiRequest(`/user/${userId}`, { method: 'DELETE' })
-      setUsers(users.filter(user => user.id !== userId))
+      await apiRequest(`/quiz/${quizId}`, { method: 'DELETE' })
+      setQuizzes(quizzes.filter(quiz => quiz._id !== quizId))
       setIsDeleteDialogOpen(false)
       toast({
         title: "Success",
-        description: "User has been deleted.",
+        description: "Quiz has been deleted.",
       })
     } catch (error) {
-      console.error('Error deleting user:', error)
+      console.error('Error deleting quiz:', error)
       toast({
         title: "Error",
-        description: "Failed to delete user. Please try again.",
+        description: "Failed to delete quiz. Please try again.",
         variant: "destructive",
       })
     }
-  }
-
-  const calculateTotalAmountPaid = (billingHistory: BillingHistory[]) => {
-    return billingHistory.reduce((total, record) => total + record.amount, 0)
   }
 
   if (isLoading) {
@@ -265,84 +258,70 @@ export default function ManageUsers() {
 
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-6">Manage Users</h1>
+      <h1 className="text-3xl font-bold mb-6">View Quizzes Created By Users</h1>
 
       <Card>
         <CardHeader>
-          <CardTitle>All Users</CardTitle>
+          <CardTitle>All Quizzes</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Subscription Plan</TableHead>
-                <TableHead>Subscription Status</TableHead>
+                <TableHead>Title</TableHead>
+                <TableHead>Job Area</TableHead>
+                <TableHead>Vertical</TableHead>
+                <TableHead>Created By</TableHead>
+                <TableHead>Created At</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>{user.name}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.role}</TableCell>
-                  <TableCell>{user.subscriptionPlanName}</TableCell>
-                  <TableCell>{user.isSubscribed ? 'Subscribed' : 'Not Subscribed'}</TableCell>
+              {quizzes.map((quiz) => (
+                <TableRow key={quiz._id}>
+                  <TableCell>{quiz.title}</TableCell>
+                  <TableCell>{quiz.jobArea}</TableCell>
+                  <TableCell>{quiz.vertical}</TableCell>
+                  <TableCell>{quiz.createdByName}</TableCell>
+                  <TableCell>{new Date(quiz.createdAt).toLocaleString()}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
                       <Dialog>
                         <DialogTrigger asChild>
-                          <Button variant="outline" size="sm" onClick={() => setSelectedUser(user)}>
-                            <UserCog className="h-4 w-4 mr-2" />
+                          <Button variant="outline" size="sm" onClick={() => setSelectedQuiz(quiz)}>
+                            <Eye className="h-4 w-4 mr-2" />
                             Details
                           </Button>
                         </DialogTrigger>
-                        <DialogContent  className="max-h-[calc(100vh-200px)] overflow-y-auto">
+                        <DialogContent className="max-h-[calc(100vh-200px)] overflow-y-auto">
                           <DialogHeader>
-                            <DialogTitle>User Details</DialogTitle>
+                            <DialogTitle>Quiz Details</DialogTitle>
                           </DialogHeader>
-                          {selectedUser && (
+                          {selectedQuiz && (
                             <div className="space-y-4">
-                              <p><strong>Name:</strong> {selectedUser.name}</p>
-                              <p><strong>Email:</strong> {selectedUser.email}</p>
-                              <p><strong>Role:</strong> {selectedUser.role}</p>
-                              <p><strong>Subscription Plan:</strong> {selectedUser.subscriptionPlanName}</p>
-                              <p><strong>Subscription Price:</strong> ${selectedUser.subscriptionPrice}</p>
-                              <p><strong>Subscription Expires At:</strong> {new Date(selectedUser.subscriptionExpiresAt).toLocaleString()}</p>
-                              <p><strong>Created At:</strong> {new Date(selectedUser.createdAt).toLocaleString()}</p>
-
-                              <h3 className="text-xl font-semibold mt-4">Billing History</h3>
-                              <Table>
-                                <TableHeader>
-                                  <TableRow>
-                                    <TableHead>Invoice ID</TableHead>
-                                    <TableHead>Amount</TableHead>
-                                    <TableHead>Date</TableHead>
-                                  </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                  {selectedUser.billingHistory.map((billing) => (
-                                    <TableRow key={billing.invoiceId}>
-                                      <TableCell>{billing.invoiceId}</TableCell>
-                                      <TableCell>${billing.amount}</TableCell>
-                                      <TableCell>{new Date(billing.date).toLocaleString()}</TableCell>
-                                    </TableRow>
-                                  ))}
-                                </TableBody>
-                              </Table>
-                              <p className="mt-4"><strong>Total Paid:</strong> ${calculateTotalAmountPaid(selectedUser.billingHistory)}</p>
+                              <p><strong>Title:</strong> {selectedQuiz.title}</p>
+                              <p><strong>Job Area:</strong> {selectedQuiz.jobArea}</p>
+                              <p><strong>Vertical:</strong> {selectedQuiz.vertical}</p>
+                              <p><strong>Created By:</strong> {selectedQuiz.createdByName}</p>
+                              <p><strong>Created At:</strong> {new Date(selectedQuiz.createdAt).toLocaleString()}</p>
+                              <p><strong>Questions:</strong></p>
+                              <ul>
+                                {selectedQuiz.questions.map((question) => (
+                                  <li key={question._id}>
+                                    <p><strong>Q:</strong> {question.text}</p>
+                                    <p><strong>Options:</strong> {question.options.join(', ')}</p>
+                                  </li>
+                                ))}
+                              </ul>
                             </div>
                           )}
                         </DialogContent>
                       </Dialog>
-                      <Button
-                        variant="destructive"
+                      <Button 
+                        variant="destructive" 
                         size="sm"
                         onClick={() => {
-                          setSelectedUser(user)
+                          setSelectedQuiz(quiz)
                           setIsDeleteDialogOpen(true)
                         }}
                       >
@@ -359,22 +338,22 @@ export default function ManageUsers() {
       </Card>
 
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-h-[calc(100vh-200px)] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Confirm Deletion</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this user? This action cannot be undone.
+              Are you sure you want to delete this quiz? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          {selectedUser && (
+          {selectedQuiz && (
             <div className="space-y-4">
-              <p><strong>Name:</strong> {selectedUser.name}</p>
-              <p><strong>Email:</strong> {selectedUser.email}</p>
+              <p><strong>Title:</strong> {selectedQuiz.title}</p>
+              <p><strong>Created By:</strong> {selectedQuiz.createdByName}</p>
             </div>
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Cancel</Button>
-            <Button variant="destructive" onClick={() => selectedUser && handleDeleteUser(selectedUser._id)}>Delete User</Button>
+            <Button variant="destructive" onClick={() => selectedQuiz && handleDeleteQuiz(selectedQuiz._id)}>Delete Quiz</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

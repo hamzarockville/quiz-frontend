@@ -382,6 +382,8 @@ export default function TakeTest() {
   const [teamSize, setTeamSize] = useState(1); // For team subscriptions
   const [userId, setUserId] = useState<string | null>(null);
   const [questionType, setQuestionType] = useState<"mcq" | "q&a">("mcq");
+  const [verticals, setVerticals] = useState<{ id: string; name: string }[]>([]);
+  const [selectedVertical, setSelectedVertical] = useState<string>('');
   const {toast} = useToast()
 
   useEffect(() => {
@@ -397,7 +399,23 @@ export default function TakeTest() {
       })
     }
   }, []);
+  useEffect(() => {
+    const fetchVerticals = async () => {
+      try {
+        const fetchedVerticals = await apiRequest<{ id: string; name: string }[]>('/vertical');
+        setVerticals(fetchedVerticals);
+      } catch (error) {
+        console.error('Error fetching verticals:', error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to fetch verticals. Please try again.",
+        });
+      }
+    };
 
+    fetchVerticals();
+  }, []);
   useEffect(() => {
     if (!userId) return;
 
@@ -467,6 +485,7 @@ export default function TakeTest() {
         body: {
           title,
           jobArea: "Job Role",
+          vertical: selectedVertical,
           questions: generatedQuestions,
         },
       });
@@ -550,6 +569,22 @@ export default function TakeTest() {
               onChange={(e) => setTitle(e.target.value)}
               className="w-full"
             />
+              {/* Vertical Selection */}
+          <div className="space-y-2">
+            <select
+              id="vertical"
+              value={selectedVertical}
+              onChange={(e) => setSelectedVertical(e.target.value)}
+              className="w-full h-10 px-3 py-2 text-sm bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+            >
+              <option value="">Select a Vertical</option>
+              {verticals.map((vertical) => (
+                <option key={vertical.id} value={vertical.name}>
+                  {vertical.name}
+                </option>
+              ))}
+            </select>
+          </div>
             <Textarea
               placeholder="Enter or paste job description here..."
               className="min-h-[200px]"

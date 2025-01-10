@@ -19,6 +19,8 @@ const defaultItems = [
 const adminItems = [
   { title: "Manage Subscriptions", url: "/dashboard/admin/manage-subscription", icon: Inbox },
   { title: "View Users", url: "/dashboard/admin/view-users", icon: Search },
+  { title: "View User Quiz", url: "/dashboard/admin/view-user-quiz", icon: Search },
+  { title: "Manage Verticals", url: "/dashboard/admin/manage-verticals", icon: Search },
 ];
 
 const teamAdminItems = [
@@ -32,6 +34,7 @@ const hiddenForAdmin = [
   "View Team Members",
   "Show All Tests",
   "View Results",
+  "Billing Settings",
 ];
 
 export default function CustomSidebar() {
